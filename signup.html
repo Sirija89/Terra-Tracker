@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - TerraTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- ✅ Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* YOUR ORIGINAL STYLES UNTOUCHED */
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+        }
+
+        .login-card-header h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+
+        .navbar-login {
+            justify-content: space-between;
+        }
+
+        select#language-switcher {
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            padding-right: 0.5rem;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-login">
+        <a href="index.html" class="nav-brand">
+            <img src="Logo.jpeg">
+            <span>TerraTracker</span>
+        </a>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <div class="custom-select badge">
+                <select id="language-switcher">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="te">తెలుగు</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="login-page animate-fade-in">
+        <div class="card login-card">
+            <div class="login-card-header">
+                <h2>Sign Up</h2>
+                <p>Create an account</p>
+            </div>
+
+            <!-- 🔥 ONLY CHANGE -->
+            <form id="signupForm">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-group">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="name" placeholder="John Doe">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email ID</label>
+                    <div class="input-group">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" id="email" placeholder="example@email.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="label_phone">Phone Number</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" placeholder="+1 234 567 8900">
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label>Farm Size (Acres)</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-leaf"></i>
+                        <input type="number" id="farmsize" placeholder="5">
+                    </div>
+                </div> -->
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password">
+                    </div>
+                </div>
+
+                <!-- ✅ added confirm password -->
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="confirmPassword">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary-orange">
+                        <i class="fa-solid fa-user-plus"></i> Sign Up
+                    </button>
+                    <button type="button" class="btn btn-primary-green" onclick="window.location.href='login.html'">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="firebase-config.js"></script>
+    <script>
+        document.getElementById("signupForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            
+            let phone = "";
+            const phoneEl = document.getElementById("phone");
+            if (phoneEl) {
+                phone = phoneEl.value.trim();
+            } else {
+                const telInput = document.querySelector("input[type='tel']");
+                if (telInput) phone = telInput.value.trim();
+            }
+
+            const password = document.getElementById("password") ? document.getElementById("password").value : document.querySelector("input[type='password']").value;
+            const confirmPassword = document.getElementById("confirmPassword") ? document.getElementById("confirmPassword").value : password; // fallback if missing
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
+
+            try {
+                const userCred = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCred.user.uid;
+
+                await database.ref("users/" + uid + "/profile").set({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    createdAt: Date.now()
+                });
+
+                localStorage.setItem("farmLocation", "farm1");
+                window.location.href = "dashboard.html";
+
+            } catch (err) {
+                alert(err.message);
+                console.error(err);
+            }
+        });
+    </script>
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
