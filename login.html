@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TerraTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+        }
+
+        .login-card-header h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+
+        .navbar-login {
+            justify-content: space-between;
+        }
+
+        select#language-switcher {
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            padding-right: 0.5rem;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-login">
+        <a href="index.html" class="nav-brand">
+            <img src="Logo.jpeg" alt="TerraTracker Logo">
+            <span>TerraTracker</span>
+        </a>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <div class="custom-select badge">
+                <select id="language-switcher">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="te">తెలుగు</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+    <!-- YOUR CONFIG -->
+    <script src="firebase-config.js"></script>
+    <main class="login-page animate-fade-in">
+        <div class="card login-card">
+            <div class="login-card-header">
+                <h2 data-i18n="login_title">Login</h2>
+                <p data-i18n="login_subtitle">Access your field data</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label data-i18n="label_email">Email ID</label>
+                    <div class="input-group">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" placeholder="example@email.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="label_password">Password</label>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="••••••••">
+                    </div>
+                </div>
+
+
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary-green">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="btn_login">Login</span>
+                    </button>
+                    <button type="button" class="btn btn-primary-orange" onclick="window.location.href='signup.html'">
+                        <i class="fa-solid fa-user-plus"></i> <span data-i18n="btn_signup">Sign Up</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        document.querySelector("form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const email = document.querySelector("input[type='email']").value.trim();
+            const password = document.querySelector("input[type='password']").value;
+
+            try {
+                window.isLoggingIn = true;
+                // 1. Log in with Firebase Auth (Email/Password)
+                await auth.signInWithEmailAndPassword(email, password);
+
+                localStorage.setItem("farmLocation", "farm1");
+                window.location.href = "dashboard.html";
+
+            } catch (err) {
+                if (err.code === 'auth/wrong-password') {
+                    alert("Incorrect password. Please re-enter your password.");
+                    document.querySelector("input[type='password']").value = "";
+                    document.querySelector("input[type='password']").focus();
+                } else if (err.code === 'auth/user-not-found') {
+                    if (confirm("No user found with this email. Would you like to Sign Up?")) {
+                        window.location.href = 'signup.html';
+                    }
+                } else if (err.code === 'auth/invalid-credential') {
+                    // Modern Firebase bundles "wrong password" and "user not found" into this error for security
+                    if (confirm("Invalid email or password. Please re-enter, or click OK to Sign Up if you don't have an account.")) {
+                        window.location.href = 'signup.html';
+                    } else {
+                        document.querySelector("input[type='password']").value = "";
+                        document.querySelector("input[type='password']").focus();
+                    }
+                } else {
+                    alert(err.message);
+                }
+                
+                window.isLoggingIn = false;
+                console.error(err);
+            }
+        });
+    </script>
+
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

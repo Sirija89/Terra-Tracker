@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability - TerraTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .creative-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-color) 0%, rgba(100, 200, 100, 0.1) 100%);
+        }
+
+        .creative-card {
+            width: 100%;
+            max-width: 700px;
+            padding: 4rem;
+        }
+
+        .creative-card h1 {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .creative-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+        }
+
+        .icon-huge {
+            font-size: 5rem;
+            color: var(--primary-orange);
+            margin-bottom: 2rem;
+        }
+
+        select#language-switcher {
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            padding-right: 0.5rem;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="Logo.jpeg" alt="TerraTracker Logo">
+            <span>TerraTracker</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" data-i18n="nav_home">Home</a>
+            <a href="solutions.html" data-i18n="nav_solutions">Solutions</a>
+            <a href="sustainability.html" class="active" data-i18n="nav_sustainability">Sustainability</a>
+            <a href="how-it-works.html" data-i18n="nav_how">How it Work</a>
+        </div>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <div class="custom-select badge">
+                <select id="language-switcher">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="te">తెలుగు</option>
+                </select>
+            </div>
+            <a href="login.html" class="btn btn-primary-orange" data-i18n="btn_get_started">Get Started</a>
+        </div>
+    </nav>
+
+    <main class="creative-page animate-fade-in">
+        <div class="card creative-card">
+            <i class="fa-solid fa-leaf icon-huge"></i>
+            <h1 data-i18n="page_sus_title">Sustainability</h1>
+            <p data-i18n="page_sus_sub">Reducing fertilizer waste by up to 30% to build a greener earth.</p>
+            <a href="index.html" class="btn btn-outline" style="font-size: 1rem; padding: 0.7rem 1.5rem;">
+                <i class="fa-solid fa-arrow-left"></i> <span data-i18n="nav_home">Home</span>
+            </a>
+        </div>
+    </main>
+
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

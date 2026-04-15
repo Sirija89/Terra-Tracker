@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerraTracker - Smart Farming Solution</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--bg-color) 0%, rgba(228, 241, 228, 0.4) 100%);
+            min-height: 100vh;
+            --hero-highlight-color: black;
+            /* Light mode → black */
+        }
+
+        [data-theme='dark'] body {
+            background: linear-gradient(135deg, var(--bg-color) 0%, rgba(30, 45, 30, 0.4) 100%);
+            --hero-highlight-color: white;
+            /* Dark mode → white */
+        }
+
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+            min-height: calc(100vh - 80px);
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            font-weight: 500;
+            margin: 1.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .hero-title span {
+            color: var(--primary-green);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            max-width: 90%;
+        }
+
+        .hero-image-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            position: relative;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 2rem;
+            object-fit: cover;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        select#language-switcher {
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            padding-right: 0.5rem;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="Logo.jpeg" alt="TerraTracker Logo">
+            <span>TerraTracker</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="active" data-i18n="nav_home">Home</a>
+            <a href="solutions.html" data-i18n="nav_solutions">Solutions</a>
+            <a href="sustainability.html" data-i18n="nav_sustainability">Sustainability</a>
+            <a href="how-it-works.html" data-i18n="nav_how">How it Work</a>
+        </div>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <div class="custom-select badge">
+                <select id="language-switcher">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="te">తెలుగు</option>
+                </select>
+            </div>
+            <a href="login.html" class="btn btn-primary-orange" data-i18n="btn_get_started">Get Started</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero-section animate-fade-in">
+            <div class="hero-content">
+                <div class="badge">
+                    <span class="dot"></span>
+                    <span data-i18n="badge_smart">Smart Farming Solution</span>
+                </div>
+                <h6 class="hero-title">
+                    <span data-i18n="hero_title_1">When technology meets farming,</span>
+                    <span style="color: var(--hero-highlight-color);" data-i18n="hero_title_2">every field becomes
+                        smarter</span>
+                    <span data-i18n="hero_title_3">and every harvest becomes better.</span>
+                </h6>
+                <p class="hero-subtitle" data-i18n="hero_subtitle">
+                    Real-time soil health monitoring and tailored fertilizer advice for our unique soils. Boost your
+                    yield and sustain the land effortlessly.
+                </p>
+            </div>
+            <div class="hero-image-wrapper">
+                <img src="hero_farmer.png" alt="Farmer using smart technology in field" class="hero-image">
+            </div>
+        </section>
+    </main>
+
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

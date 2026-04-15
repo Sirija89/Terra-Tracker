@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TerraTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .overview-title h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .overview-title p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1.5rem;
+        }
+
+        .metric-info h3 {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .metric-status {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-optimal {
+            color: var(--primary-green);
+        }
+
+        .status-low {
+            color: var(--primary-orange);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--icon-bg);
+            color: var(--icon-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .recommendation-card {
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .rec-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .rec-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--icon-bg);
+            color: var(--icon-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .rec-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .rec-content {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .rec-content p {
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .rec-bg-icon {
+            position: absolute;
+            right: 2rem;
+            bottom: -1rem;
+            font-size: 12rem;
+            color: var(--icon-color);
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(108, 184, 108, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(108, 184, 108, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(108, 184, 108, 0);
+            }
+        }
+
+        select#language-switcher {
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            padding-right: 0.5rem;
+            width: auto;
+        }
+
+        /* Crop Selector */
+        .crop-selector-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .crop-selector-row label {
+            color: var(--primary-green);
+            font-size: 1rem;
+        }
+
+        #crop-selector {
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: auto;
+        }
+
+        /* Chart Section */
+        .chart-card {
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+
+        /* Mobile Dashboard Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem 3%;
+            }
+
+            .overview-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-value {
+                font-size: 1.6rem;
+            }
+
+            .chart-container {
+                height: 220px;
+            }
+
+            .recommendation-card {
+                padding: 1.2rem;
+            }
+
+            .rec-bg-icon {
+                font-size: 6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="Logo.jpeg" alt="TerraTracker Logo">
+            <span>TerraTracker</span>
+        </div>
+        <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="index.html" data-i18n="nav_home">Home</a>
+            <a href="dashboard.html" class="active" data-i18n="nav_dashboard">Dashboard</a>
+            <a href="dashboard.html" data-i18n="nav_report">Soil Report</a>
+            <a href="dashboard.html" data-i18n="nav_rec">Recommendations</a>
+        </div>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <i class="fa-solid fa-gear" style="color: var(--text-secondary); cursor: pointer;"
+                onclick="alert('Settings panel is currently mocked.')"></i>
+            <div class="custom-select badge">
+                <select id="language-switcher">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="te">తెలుగు</option>
+                </select>
+            </div>
+            <a href="index.html" class="btn btn-text"
+                style="color: #d32f2f; display: flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span data-i18n="btn_logout">Logout</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container animate-fade-in">
+
+        <div class="card overview-header">
+            <div class="overview-title">
+                <h1 data-i18n="dash_overview">Your Field Overview</h1>
+                <div class="crop-selector-row">
+                    <!-- Crop Selector -->
+                    <label for="crop-selector"><i class="fa-solid fa-seedling"></i></label>
+                    <select id="crop-selector">
+                        <option value="general">Select Your Crop</option>
+                        <option value="coriander">🌿 Coriander </option>
+                        <option value="tomato">🍅 Tomato </option>
+                    </select>
+
+                    <!-- Soil Selector -->
+                    <label for="soil-selector" style="margin-left: 1rem;"><i
+                            class="fa-solid fa-layer-group"></i></label>
+                    <select id="soil-selector">
+                        <option value="general">Select Soil Type</option>
+                        <option value="red">🟤 Red Soil</option>
+                        <option value="black">⚫ Black Soil</option>
+                    </select>
+                </div>
+            </div>
+            <div class="badge">
+                <span class="dot pulse-dot"></span>
+                <span data-i18n="dash_sync">Live Firebase Sync</span>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <!-- Card 1: Soil Temperature → Firebase: soilTemperature -->
+            <div class="card metric-card">
+                <div class="metric-info">
+                    <h3 data-i18n="dash_temp">Soil Temperature</h3>
+                    <div class="metric-value" id="val-soil-temp">--°C</div>
+                    <div class="metric-status status-optimal" id="status-soil-temp">Loading...</div>
+                </div>
+                <div class="metric-icon">
+                    <i class="fa-solid fa-temperature-half"></i>
+                </div>
+            </div>
+
+            <!-- Card 2: Air Temperature → Firebase: airTemperature -->
+            <div class="card metric-card">
+                <div class="metric-info">
+                    <h3 data-i18n="dash_air_temp">Air Temperature</h3>
+                    <div class="metric-value" id="val-air-temp">--°C</div>
+                    <div class="metric-status status-optimal" id="status-air-temp">Loading...</div>
+                </div>
+                <div class="metric-icon">
+                    <i class="fa-solid fa-sun"></i>
+                </div>
+            </div>
+
+            <!-- Card 3: Soil Moisture → Firebase: moisture -->
+            <div class="card metric-card">
+                <div class="metric-info">
+                    <h3 data-i18n="dash_moist">Soil Moisture</h3>
+                    <div class="metric-value" id="val-moisture">--%</div>
+                    <div class="metric-status status-optimal" id="status-moisture">Loading...</div>
+                </div>
+                <div class="metric-icon">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+            </div>
+
+            <!-- Card 4: Humidity → Firebase: humidity -->
+            <div class="card metric-card">
+                <div class="metric-info">
+                    <h3 data-i18n="dash_humidity">Humidity</h3>
+                    <div class="metric-value" id="val-humidity">--%</div>
+                    <div class="metric-status status-optimal" id="status-humidity">Loading...</div>
+                </div>
+                <div class="metric-icon">
+                    <i class="fa-solid fa-water"></i>
+                </div>
+            </div>
+
+            <!-- Card 5: pH Value → Firebase: pH -->
+            <div class="card metric-card">
+                <div class="metric-info">
+                    <h3 data-i18n="dash_ph">pH Value</h3>
+                    <div class="metric-value" id="val-ph">--</div>
+                    <div class="metric-status status-optimal" id="status-ph">Loading...</div>
+                </div>
+                <div class="metric-icon">
+                    <i class="fa-solid fa-flask"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historical Chart Section -->
+        <div class="card chart-card">
+            <div class="chart-header">
+                <div class="rec-header">
+                    <div class="rec-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h2 class="rec-title">Sensor Trends (Last 20 Readings)</h2>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="sensor-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="card recommendation-card">
+            <div class="rec-header">
+                <div class="rec-icon">
+                    <i class="fa-regular fa-lightbulb"></i>
+                </div>
+                <h2 class="rec-title" data-i18n="rec_title">Recommendation</h2>
+            </div>
+            <div class="rec-content">
+                <p id="rec-text">
+                    <span style="color: var(--text-secondary); font-style: italic;">
+                        🤖 Loading AI recommendations...
+                    </span>
+                </p>
+            </div>
+            <i class="fa-solid fa-plant-wilt rec-bg-icon"></i>
+        </div>
+
+    </main>
+
+    <!-- Chart.js — lightweight charting library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Firebase SDK — loaded from Google's CDN (like Font Awesome) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+    <!-- Your existing scripts -->
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+
+    <!-- Firebase connection logic (must be AFTER the SDK scripts above) -->
+    <script src="firebase-config.js"></script>
+</body>
+
+</html>
